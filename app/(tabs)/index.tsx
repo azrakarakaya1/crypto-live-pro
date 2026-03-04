@@ -5,6 +5,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -46,26 +47,35 @@ export default function HomeScreen() {
           />
         }
       >
-        {/* Header */}
+        {/* ── Header ── */}
         <View style={styles.header}>
-          <View>
-            <Text style={styles.title}>Crypto Live Pro</Text>
+          <View style={styles.logoWrapper}>
+            <Image
+              source={require('../../assets/images/icon.png')}
+              style={styles.logoImage}
+            />
+          </View>
+          <View style={styles.titleBlock}>
+            <Text style={styles.appName}>Crypto Live Pro</Text>
             <Text style={styles.date}>{dateStr}</Text>
           </View>
-          <View style={styles.liveIndicator}>
+          <View style={styles.livePill}>
             <View style={styles.liveDot} />
             <Text style={styles.liveText}>Live</Text>
           </View>
         </View>
 
-        {/* Error banner */}
+        {/* ── Divider ── */}
+        <View style={styles.divider} />
+
+        {/* ── Error banner ── */}
         {error && (
           <View style={styles.errorBanner}>
             <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
 
-        {/* Loading (first load only) */}
+        {/* ── First load spinner ── */}
         {loading && !globalData && (
           <View style={styles.loadingBlock}>
             <ActivityIndicator size="large" color={Colors.primary} />
@@ -73,19 +83,19 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {/* BTC + ETH prominent prices */}
+        {/* ── BTC + ETH price cards ── */}
         {coins.length > 0 && <TopCoinsRow coins={coins} />}
 
-        {/* Market stats bar */}
+        {/* ── Market stats ── */}
         {globalData && <MarketStatsCard data={globalData} />}
 
-        {/* Fear & Greed */}
+        {/* ── Fear & Greed ── */}
         {fearGreed && <FearGreedCard data={fearGreed} />}
 
-        {/* Top Gainers */}
+        {/* ── Top Gainers ── */}
         {coins.length > 0 && <TopMovers coins={coins} />}
 
-        {/* Trending */}
+        {/* ── Trending ── */}
         <TrendingSection coins={trending} />
 
       </ScrollView>
@@ -99,27 +109,49 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    paddingBottom: 32,
+    paddingBottom: 40,
   },
+
+  // ── Header ──────────────────────────────
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 18,
+    paddingTop: 14,
+    paddingBottom: 16,
+    gap: 12,
   },
-  title: {
-    fontSize: 24,
+  logoWrapper: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    backgroundColor: '#E8F4FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(59,130,246,0.3)',
+  },
+  logoImage: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+  },
+  titleBlock: {
+    flex: 1,
+  },
+  appName: {
+    fontSize: 18,
     fontWeight: '800',
     color: Colors.text,
+    letterSpacing: -0.3,
   },
   date: {
-    fontSize: 12,
+    fontSize: 11,
     color: Colors.textMuted,
-    marginTop: 3,
+    marginTop: 2,
   },
-  liveIndicator: {
+  livePill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -128,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(34,197,94,0.2)',
+    borderColor: 'rgba(34,197,94,0.25)',
   },
   liveDot: {
     width: 6,
@@ -137,15 +169,24 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.green,
   },
   liveText: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 11,
+    fontWeight: '700',
     color: Colors.green,
   },
+  divider: {
+    height: 1,
+    backgroundColor: Colors.cardBorder,
+    marginBottom: 16,
+  },
+
+  // ── States ──────────────────────────────
   errorBanner: {
     marginHorizontal: 16,
     marginBottom: 12,
-    backgroundColor: 'rgba(239,68,68,0.15)',
-    borderRadius: 8,
+    backgroundColor: 'rgba(239,68,68,0.12)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(239,68,68,0.25)',
     padding: 12,
   },
   errorText: {
@@ -154,7 +195,7 @@ const styles = StyleSheet.create({
   },
   loadingBlock: {
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 48,
     gap: 12,
   },
   loadingText: {

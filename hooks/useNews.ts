@@ -8,17 +8,14 @@ export function useNews() {
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    if (!process.env.EXPO_PUBLIC_CRYPTOPANIC_KEY) {
-      setError('no_key');
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
       const data = await getNews();
       setArticles(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load news');
+      const msg = e instanceof Error ? e.message : 'Failed to load news';
+      setError(msg === 'no_key' ? 'no_key' : msg);
     } finally {
       setLoading(false);
     }

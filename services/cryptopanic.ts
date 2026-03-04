@@ -1,12 +1,22 @@
+import Constants from 'expo-constants';
 import type { NewsArticle } from '@/types';
 
 const BASE_URL = 'https://cryptopanic.com/api/developer/v2';
 
-// Set your CryptoPanic API key in app config or env
-const API_KEY = process.env.EXPO_PUBLIC_CRYPTOPANIC_KEY ?? '';
+function getApiKey(): string {
+  // expo-constants is the most reliable source in Expo Go
+  const fromConstants = (Constants.expoConfig?.extra as Record<string, string> | undefined)
+    ?.cryptoPanicKey;
+  if (fromConstants) return fromConstants;
+  // fallback: Metro-inlined env var
+  return process.env.EXPO_PUBLIC_CRYPTOPANIC_KEY ?? '';
+}
 
 export async function getNews(currencies?: string[]): Promise<NewsArticle[]> {
-  const params = new URLSearchParams({ auth_token: API_KEY, public: 'true' });
+  const key = getApiKey();
+  if (!key) throw new Error('no_key');
+
+  const params = new URLSearchParams({ auth_token: key, public: 'true', kind: 'news' });
   if (currencies?.length) params.set('currencies', currencies.join(','));
 
   const res = await fetch(`${BASE_URL}/posts/?${params}`);

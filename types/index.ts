@@ -93,6 +93,28 @@ export interface WhaleTransaction {
   timestamp: number;
 }
 
+export interface ChainNetworkStats {
+  blockHeight: number;
+  peerCount: number;
+  unconfirmedCount: number;
+  feeHigh: number;
+  feeMed: number;
+  feeLow: number;
+}
+
+export interface BtcMempoolStats {
+  count: number;
+  vsizeBytes: number;
+  totalFeeSat: number;
+}
+
+export interface BtcDifficultyStats {
+  progressPercent: number;
+  difficultyChange: number;
+  remainingBlocks: number;
+  estimatedRetargetDate: number; // unix ms
+}
+
 // ─── Learn Hub ────────────────────────────────────────────────────────────────
 
 export interface GlossaryTerm {

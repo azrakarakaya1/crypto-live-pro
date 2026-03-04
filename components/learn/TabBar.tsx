@@ -1,12 +1,11 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
 
-export type AcademyTab = 'glossary' | 'modules' | 'quiz';
+export type AcademyTab = 'glossary' | 'modules';
 
 const TABS: { key: AcademyTab; label: string }[] = [
   { key: 'glossary', label: 'Glossary' },
   { key: 'modules', label: 'Modules' },
-  { key: 'quiz', label: 'Quiz' },
 ];
 
 interface Props {

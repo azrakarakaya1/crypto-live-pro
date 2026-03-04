@@ -6,7 +6,6 @@ import Colors from '@/constants/Colors';
 import TabBar, { type AcademyTab } from '@/components/learn/TabBar';
 import GlossaryList from '@/components/learn/GlossaryList';
 import ModuleList from '@/components/learn/ModuleList';
-import QuizScreen from '@/components/learn/QuizScreen';
 
 export default function LearnScreen() {
   const [activeTab, setActiveTab] = useState<AcademyTab>('glossary');
@@ -21,7 +20,6 @@ export default function LearnScreen() {
 
       {activeTab === 'glossary' && <GlossaryList />}
       {activeTab === 'modules' && <ModuleList />}
-      {activeTab === 'quiz' && <QuizScreen />}
     </SafeAreaView>
   );
 }

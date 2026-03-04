@@ -123,14 +123,6 @@ export interface GlossaryTerm {
   category: string;
 }
 
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-}
-
 export interface LearningModule {
   id: string;
   title: string;
@@ -142,5 +134,4 @@ export interface ModuleChapter {
   id: string;
   title: string;
   content: string;
-  quiz?: QuizQuestion;
 }

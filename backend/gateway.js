@@ -30,6 +30,25 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  if (req.url === '/' || req.url === '') {
+    res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
+    res.end(JSON.stringify({
+      service: 'Crypto Live Pro — API Gateway',
+      version: '1.0.0',
+      routes: {
+        '/market/coins/markets': 'Top 100 coins by market cap',
+        '/market/global':        'Global market stats',
+        '/market/trending':      'Trending coins',
+        '/market/fear-greed':    'Fear & Greed index',
+        '/market/coins/:id/chart?days=7': 'Price chart data',
+        '/news/posts':           'Latest crypto news',
+        '/onchain/btc':          'Bitcoin on-chain stats',
+        '/onchain/eth':          'Ethereum on-chain stats',
+      },
+    }));
+    return;
+  }
+
   const route = ROUTES.find((r) => req.url?.startsWith(r.prefix));
   if (!route) {
     res.writeHead(404, { 'Content-Type': 'application/json', ...CORS });

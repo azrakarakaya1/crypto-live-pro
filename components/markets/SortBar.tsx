@@ -43,6 +43,7 @@ export default function SortBar({ selected, onSelect }: SortBarProps) {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 6,
+    flexGrow: 0,
   },
   row: {
     paddingHorizontal: 16,

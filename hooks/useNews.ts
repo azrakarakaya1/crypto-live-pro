@@ -15,6 +15,7 @@ export function useNews() {
       setArticles(data);
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed to load news';
+      console.error('[News] error:', msg, e);
       setError(msg === 'no_key' ? 'no_key' : msg);
     } finally {
       setLoading(false);

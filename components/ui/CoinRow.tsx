@@ -1,4 +1,5 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import type { Coin } from '@/types';
 import { formatUSD, formatPercent } from '@/utils/formatters';
 import Colors from '@/constants/Colors';
@@ -8,10 +9,14 @@ interface CoinRowProps {
 }
 
 export default function CoinRow({ coin }: CoinRowProps) {
+  const router = useRouter();
   const isPositive = coin.price_change_percentage_24h >= 0;
 
   return (
-    <View style={styles.row}>
+    <Pressable
+      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+      onPress={() => router.push(`/coin/${coin.id}`)}
+    >
       <Text style={styles.rank}>{coin.market_cap_rank}</Text>
       <Image source={{ uri: coin.image }} style={styles.logo} />
       <View style={styles.nameBlock}>
@@ -26,7 +31,7 @@ export default function CoinRow({ coin }: CoinRowProps) {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -39,6 +44,9 @@ const styles = StyleSheet.create({
     height: 70,
     borderBottomWidth: 1,
     borderBottomColor: Colors.cardBorder,
+  },
+  rowPressed: {
+    backgroundColor: Colors.card,
   },
   rank: {
     width: 28,

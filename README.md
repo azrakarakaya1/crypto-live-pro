@@ -27,26 +27,32 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 ## Architecture
 
 ```
-Mobile App (React Native / Expo)
-          │
-          ▼
-    API Gateway :3000
-          │
-   ┌──────┼──────────────┐
-   ▼      ▼              ▼
-Market   News        OnChain
-Service  Service     Service
-:3001    :3002        :3003
-   │        │            │
-CoinGecko  RSS Feeds  BlockCypher
-           (CoinDesk,  mempool.space
-         Cointelegraph,
-          CryptoSlate)
+┌─────────────────────────────────────────┐
+│         Mobile App  (Expo / RN)         │
+│  Home · Markets · News · OnChain · …    │
+└──────────────────┬──────────────────────┘
+                   │ HTTP
+                   ▼
+┌─────────────────────────────────────────┐
+│            API Gateway  :3000           │
+│        /market   /news   /onchain       │
+└───────┬──────────────┬──────────────────┘
+        │              │               │
+        ▼              ▼               ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│    Market    │ │     News     │ │   OnChain    │
+│  Service     │ │   Service    │ │   Service    │
+│    :3001     │ │    :3002     │ │    :3003     │
+│  TTL cache   │ │  RSS parser  │ │  TTL cache   │
+└──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+       │                │                │
+       ▼                ▼                ▼
+  CoinGecko        CoinDesk        BlockCypher
+    API            Cointelegraph   mempool.space
+                   CryptoSlate
 ```
 
-The mobile app communicates only with the API gateway. Third-party API calls, caching, and key management happen exclusively on the backend. When `EXPO_PUBLIC_API_URL` is not set, the app falls back to direct API calls for local development without the backend.
-
-![Architecture Diagram](assets/images/architecture.png)
+The mobile app communicates only with the API gateway. Third-party API calls, caching, and key management happen exclusively on the backend. When `EXPO_PUBLIC_API_URL` is not set, the app falls back to direct API calls for local development without running the backend.
 
 ### Backend Services
 

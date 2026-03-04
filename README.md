@@ -10,6 +10,12 @@ A real-time cryptocurrency tracking app for iOS and Android, built with Expo. Li
 
 ---
 
+## System Architecture
+
+![Architecture Diagram](assets/images/architecture.png)
+
+---
+
 ## Features
 
 | Tab | Description |

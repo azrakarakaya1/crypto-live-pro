@@ -10,12 +10,6 @@ A real-time cryptocurrency tracking app for iOS and Android, built with Expo. Li
 
 ---
 
-## System Architecture
-
-![Architecture Diagram](assets/images/architecture.png)
-
----
-
 ## Features
 
 | Tab | Description |
@@ -34,52 +28,7 @@ A real-time cryptocurrency tracking app for iOS and Android, built with Expo. Li
 
 The app follows a **microservice-oriented client architecture**: each external data source is encapsulated in its own service module, consumed by isolated Zustand stores, and rendered by tab-specific component trees. No service talks directly to another — all coordination goes through the store layer.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Expo Router (UI Layer)                   │
-│                                                                 │
-│   Home   Markets   Portfolio   News   Learn   On-Chain   Profile│
-│    │        │          │        │       │         │          │  │
-└────┼────────┼──────────┼────────┼───────┼─────────┼──────────┼──┘
-     │        │          │        │       │         │          │
-┌────▼────────▼──────────▼────────▼───────┼─────────┼──────────▼──┐
-│                      Store Layer (Zustand)                       │
-│                                                                  │
-│   useMarketStore          usePortfolioStore   useSettingsStore   │
-│   ├── coins               ├── holdings        └── currency       │
-│   ├── globalData          ├── alerts                             │
-│   ├── trending            └── (persisted)                        │
-│   ├── fearGreed                                                  │
-│   └── watchlist                                                  │
-└──────────────┬────────────────────────────────────────────────── ┘
-               │  reads / writes
-┌──────────────▼──────────────────────────────────────────────────┐
-│                     Service Layer                               │
-│                                                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐  │
-│  │  coingecko.ts   │  │  cryptopanic.ts │  │  feargreed.ts  │  │
-│  │                 │  │                 │  │                │  │
-│  │ • getCoins()    │  │ • getNews()     │  │ • getFear      │  │
-│  │ • getGlobal()   │  │                 │  │   Greed()      │  │
-│  │ • getTrending() │  │                 │  │                │  │
-│  │ • getCoinDetail │  │                 │  │                │  │
-│  │ • getCoinChart()│  │                 │  │                │  │
-│  └────────┬────────┘  └────────┬────────┘  └───────┬────────┘  │
-└───────────┼────────────────────┼───────────────────┼───────────┘
-            │                    │                   │
-┌───────────▼────────────────────▼───────────────────▼───────────┐
-│                      External APIs                              │
-│                                                                 │
-│   CoinGecko API          CryptoPanic API    Alternative.me      │
-│   (market data,          (crypto news +     (Fear & Greed       │
-│    prices, charts)        sentiment votes)   Index)             │
-│                                                                 │
-│                    ┌────────────────┐                           │
-│                    │  OpenAI API    │  ← Phase 2 (AI summaries) │
-│                    │  (GPT-4o-mini) │                           │
-│                    └────────────────┘                           │
-└─────────────────────────────────────────────────────────────────┘
-```
+![Architecture Diagram](assets/images/architecture.png)
 
 ### Layer responsibilities
 

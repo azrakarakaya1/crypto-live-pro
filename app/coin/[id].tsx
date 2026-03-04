@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -16,7 +17,7 @@ import Colors from '@/constants/Colors';
 import { useMarketStore } from '@/store/useMarketStore';
 import { getCoinChart } from '@/services/coingecko';
 import { formatUSD, formatPercent } from '@/utils/formatters';
-import PriceChart from '@/components/markets/PriceChart';
+import LineChart from '@/components/markets/LineChart';
 import CoinStatGrid from '@/components/markets/CoinStatGrid';
 
 type Range = '1' | '7' | '30' | '365';
@@ -36,8 +37,11 @@ export default function CoinDetailScreen() {
   const addToWatchlist = useMarketStore((s) => s.addToWatchlist);
   const removeFromWatchlist = useMarketStore((s) => s.removeFromWatchlist);
 
+  const { width: screenWidth } = useWindowDimensions();
+
   const [range, setRange] = useState<Range>('7');
   const [prices, setPrices] = useState<number[]>([]);
+  const [timestamps, setTimestamps] = useState<number[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
 
   const isWatchlisted = id ? watchlist.includes(id) : false;
@@ -47,10 +51,11 @@ export default function CoinDetailScreen() {
     setChartLoading(true);
     try {
       const data = await getCoinChart(id, Number(range));
-      // data.prices is [[timestamp, price], ...]
-      setPrices((data.prices as [number, number][]).map(([, p]) => p));
+      const raw = data.prices as [number, number][];
+      setTimestamps(raw.map(([t]) => t));
+      setPrices(raw.map(([, p]) => p));
     } catch {
-      // silently fail — chart just won't show
+      // silently fail
     } finally {
       setChartLoading(false);
     }
@@ -133,11 +138,18 @@ export default function CoinDetailScreen() {
         {/* Chart */}
         <View style={styles.chartContainer}>
           {chartLoading ? (
-            <View style={[styles.chartPlaceholder]}>
+            <View style={styles.chartPlaceholder}>
               <ActivityIndicator size="small" color={Colors.primary} />
             </View>
           ) : (
-            <PriceChart prices={prices} height={120} />
+            <LineChart
+              prices={prices}
+              timestamps={timestamps}
+              range={range}
+              width={screenWidth - 32}
+              height={200}
+              color={isUp ? Colors.green : Colors.red}
+            />
           )}
         </View>
 
@@ -252,11 +264,11 @@ const styles = StyleSheet.create({
   chartContainer: {
     paddingHorizontal: 16,
     marginBottom: 24,
-    height: 120,
+    height: 200,
     justifyContent: 'center',
   },
   chartPlaceholder: {
-    height: 120,
+    height: 200,
     alignItems: 'center',
     justifyContent: 'center',
   },

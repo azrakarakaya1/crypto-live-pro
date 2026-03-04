@@ -75,8 +75,9 @@ export interface NewsArticle {
   source: string;
   publishedAt: string;
   sentiment: Sentiment;
-  summary?: string; // AI-generated TL;DR
-  currencies: string[]; // coin symbols mentioned
+  summary?: string;
+  description?: string;
+  currencies: string[];
 }
 
 // ─── On-Chain ─────────────────────────────────────────────────────────────────

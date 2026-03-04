@@ -1,0 +1,15 @@
+{
+  "name": "crypto-live-pro-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "market":  "node --env-file=.env services/market.js",
+    "news":    "node --env-file=.env services/news.js",
+    "onchain": "node --env-file=.env services/onchain.js",
+    "gateway": "node --env-file=.env gateway.js",
+    "dev":     "node --env-file=.env run-all.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

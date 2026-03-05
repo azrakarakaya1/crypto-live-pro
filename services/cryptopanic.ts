@@ -3,57 +3,84 @@ import type { NewsArticle } from '@/types';
 
 const DIRECT = 'https://cryptopanic.com/api/developer/v2';
 
-function getApiKey(): string {
-  const fromConstants = (Constants.expoConfig?.extra as Record<string, string> | undefined)
-    ?.cryptoPanicKey;
-  if (fromConstants) return fromConstants;
-  return process.env.EXPO_PUBLIC_CRYPTOPANIC_KEY ?? '';
+const RSS_FEEDS = [
+  { name: 'CoinDesk',      url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+  { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
+  { name: 'CryptoSlate',   url: 'https://cryptoslate.com/feed/' },
+];
+
+function getGatewayUrl(): string {
+  const extra = Constants.expoConfig?.extra as Record<string, string> | undefined;
+  return extra?.apiUrl ?? process.env.EXPO_PUBLIC_API_URL ?? '';
 }
 
-function gatewayUrl(): string | null {
-  const gw = (Constants.expoConfig?.extra as Record<string, string> | undefined)?.apiUrl
-    ?? process.env.EXPO_PUBLIC_API_URL
-    ?? '';
-  return gw ? `${gw}/news` : null;
+// ── RSS parser ────────────────────────────────────────────────────────────────
+
+function extractTag(block: string, name: string): string {
+  const cdata = block.match(new RegExp(`<${name}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${name}>`, 'i'));
+  if (cdata) return cdata[1].trim();
+  const plain = block.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)<\\/${name}>`, 'i'));
+  return plain ? plain[1].trim() : '';
 }
+
+function parseRss(xml: string, sourceName: string): NewsArticle[] {
+  const items: NewsArticle[] = [];
+  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+  let match: RegExpExecArray | null;
+  let idx = 0;
+
+  while ((match = itemRegex.exec(xml)) !== null) {
+    const block = match[1];
+    const title   = extractTag(block, 'title');
+    const link    = extractTag(block, 'link') || extractTag(block, 'guid');
+    const pubDate = extractTag(block, 'pubDate') || extractTag(block, 'dc:date');
+
+    if (!title || !link || !link.startsWith('http')) continue;
+
+    items.push({
+      id:          `${sourceName}-${++idx}-${Date.now()}`,
+      title,
+      url:         link,
+      source:      sourceName,
+      publishedAt: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
+      sentiment:   'neutral',
+      currencies:  [],
+    });
+  }
+  return items;
+}
+
+async function fetchRssNews(): Promise<NewsArticle[]> {
+  const results = await Promise.allSettled(
+    RSS_FEEDS.map(async ({ name, url }) => {
+      const res = await fetch(url, { headers: { 'User-Agent': 'CryptoLivePro/1.0' } });
+      if (!res.ok) throw new Error(`${name} ${res.status}`);
+      const xml = await res.text();
+      return parseRss(xml, name);
+    })
+  );
+
+  return results
+    .filter((r): r is PromiseFulfilledResult<NewsArticle[]> => r.status === 'fulfilled')
+    .flatMap((r) => r.value)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
 
 export async function getNews(currencies?: string[]): Promise<NewsArticle[]> {
-  const gw = gatewayUrl();
+  const gw = getGatewayUrl();
 
+  // Route through backend gateway when available
   if (gw) {
-    // Route through news microservice — API key stays on the server
     const params = new URLSearchParams();
     if (currencies?.length) params.set('currencies', currencies.join(','));
-    const url = `${gw}/posts${params.toString() ? `?${params}` : ''}`;
+    const url = `${gw}/news/posts${params.toString() ? `?${params}` : ''}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`News service error: ${res.status}`);
     return res.json();
   }
 
-  // Direct fallback
-  const key = getApiKey();
-  if (!key) throw new Error('no_key');
-  const params = new URLSearchParams({ auth_token: key, public: 'true', kind: 'news' });
-  if (currencies?.length) params.set('currencies', currencies.join(','));
-  const res = await fetch(`${DIRECT}/posts/?${params}`);
-  if (!res.ok) throw new Error(`CryptoPanic error: ${res.status}`);
-  const json = await res.json();
-  return (json.results ?? [])
-    .map((item: any) => ({
-      id: String(item.id),
-      title: item.title,
-      url: item.url ?? item.source?.url ?? null,
-      source: item.source?.title ?? '',
-      publishedAt: item.published_at,
-      sentiment: mapSentiment(item.votes),
-      currencies: (item.currencies ?? []).map((c: any) => c.code),
-    }))
-    .filter((item: NewsArticle) => !!item.url);
-}
-
-function mapSentiment(votes: any): 'positive' | 'negative' | 'neutral' {
-  if (!votes) return 'neutral';
-  if (votes.positive > votes.negative) return 'positive';
-  if (votes.negative > votes.positive) return 'negative';
-  return 'neutral';
+  // Direct RSS fallback — no API key required
+  return fetchRssNews();
 }

@@ -20,6 +20,7 @@ import { formatPercent } from '@/utils/formatters';
 import { useFormatPrice } from '@/hooks/useFormatPrice';
 import LineChart from '@/components/markets/LineChart';
 import CoinStatGrid from '@/components/markets/CoinStatGrid';
+import AddAlertModal from '@/components/portfolio/AddAlertModal';
 
 type Range = '1' | '7' | '30' | '365';
 const RANGES: { label: string; value: Range }[] = [
@@ -45,6 +46,7 @@ export default function CoinDetailScreen() {
   const [prices, setPrices] = useState<number[]>([]);
   const [timestamps, setTimestamps] = useState<number[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
+  const [alertModal, setAlertModal] = useState(false);
 
   const isWatchlisted = id ? watchlist.includes(id) : false;
 
@@ -92,6 +94,9 @@ export default function CoinDetailScreen() {
           <Text style={styles.navTitle}>{coin.name}</Text>
           <Text style={styles.navSymbol}>{coin.symbol.toUpperCase()}</Text>
         </View>
+        <TouchableOpacity style={styles.navBtn} onPress={() => setAlertModal(true)}>
+          <Ionicons name="notifications-outline" size={22} color={Colors.textSecondary} />
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navBtn}
           onPress={() =>
@@ -161,6 +166,14 @@ export default function CoinDetailScreen() {
 
         <View style={{ height: 32 }} />
       </ScrollView>
+
+      <AddAlertModal
+        visible={alertModal}
+        coinId={coin.id}
+        coinSymbol={coin.symbol}
+        currentPrice={coin.current_price}
+        onClose={() => setAlertModal(false)}
+      />
     </SafeAreaView>
   );
 }

@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '@/constants/Colors';
 import { useMarketStore } from '@/store/useMarketStore';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 import PortfolioSummaryCard from '@/components/portfolio/PortfolioSummaryCard';
 import HoldingRow from '@/components/portfolio/HoldingRow';
+import AlertRow from '@/components/portfolio/AlertRow';
 import AddHoldingModal from '@/components/portfolio/AddHoldingModal';
 import type { PortfolioEntry } from '@/types';
 
 export default function PortfolioScreen() {
   const coins = useMarketStore((s) => s.coins);
   const entries = usePortfolioStore((s) => s.entries);
+  const alerts = usePortfolioStore((s) => s.alerts);
   const removeEntry = usePortfolioStore((s) => s.removeEntry);
+  const removeAlert = usePortfolioStore((s) => s.removeAlert);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -35,22 +39,44 @@ export default function PortfolioScreen() {
           <Text style={styles.title}>Portfolio</Text>
         </View>
 
-        <FlatList<PortfolioEntry>
-          data={entries}
+        <SectionList
+          sections={[
+            { title: 'holdings', data: entries },
+            { title: 'alerts', data: alerts },
+          ]}
           keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={(entries.length === 0 && alerts.length === 0) && styles.emptyContent}
           ListHeaderComponent={
             <PortfolioSummaryCard totalValue={totalValue} totalCost={totalCost} />
           }
-          renderItem={({ item }) => (
-            <HoldingRow
-              entry={item}
-              currentPrice={getCurrentPrice(item.coinId)}
-              onRemove={removeEntry}
-            />
-          )}
-          ListEmptyComponent={null}
-          contentContainerStyle={entries.length === 0 && styles.emptyContent}
-          showsVerticalScrollIndicator={false}
+          renderSectionHeader={({ section }) => {
+            if (section.title === 'alerts' && alerts.length === 0) return null;
+            if (section.title === 'holdings' && entries.length === 0) return null;
+            return (
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>
+                  {section.title === 'holdings' ? 'Holdings' : 'Price Alerts'}
+                </Text>
+                {section.title === 'alerts' && (
+                  <Text style={styles.sectionHint}>Set alerts from any coin page</Text>
+                )}
+              </View>
+            );
+          }}
+          renderItem={({ item, section }) => {
+            if (section.title === 'holdings') {
+              const entry = item as PortfolioEntry;
+              return (
+                <HoldingRow
+                  entry={entry}
+                  currentPrice={getCurrentPrice(entry.coinId)}
+                  onRemove={removeEntry}
+                />
+              );
+            }
+            return <AlertRow alert={item as any} onRemove={removeAlert} />;
+          }}
         />
 
         {/* FAB */}
@@ -85,6 +111,24 @@ const styles = StyleSheet.create({
   },
   emptyContent: {
     flexGrow: 1,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 8,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.text,
+  },
+  sectionHint: {
+    fontSize: 11,
+    color: Colors.textMuted,
   },
   fab: {
     position: 'absolute',

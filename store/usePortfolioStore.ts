@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { PortfolioEntry, PriceAlert } from '@/types';
 
 interface PortfolioState {
@@ -14,27 +16,35 @@ interface PortfolioState {
   triggerAlert: (id: string) => void;
 }
 
-export const usePortfolioStore = create<PortfolioState>((set) => ({
-  entries: [],
-  alerts: [],
+export const usePortfolioStore = create<PortfolioState>()(
+  persist(
+    (set) => ({
+      entries: [],
+      alerts: [],
 
-  addEntry: (entry) =>
-    set((state) => ({ entries: [...state.entries, entry] })),
-  updateEntry: (id, patch) =>
-    set((state) => ({
-      entries: state.entries.map((e) => (e.id === id ? { ...e, ...patch } : e)),
-    })),
-  removeEntry: (id) =>
-    set((state) => ({ entries: state.entries.filter((e) => e.id !== id) })),
+      addEntry: (entry) =>
+        set((state) => ({ entries: [...state.entries, entry] })),
+      updateEntry: (id, patch) =>
+        set((state) => ({
+          entries: state.entries.map((e) => (e.id === id ? { ...e, ...patch } : e)),
+        })),
+      removeEntry: (id) =>
+        set((state) => ({ entries: state.entries.filter((e) => e.id !== id) })),
 
-  addAlert: (alert) =>
-    set((state) => ({ alerts: [...state.alerts, alert] })),
-  removeAlert: (id) =>
-    set((state) => ({ alerts: state.alerts.filter((a) => a.id !== id) })),
-  triggerAlert: (id) =>
-    set((state) => ({
-      alerts: state.alerts.map((a) =>
-        a.id === id ? { ...a, triggered: true } : a
-      ),
-    })),
-}));
+      addAlert: (alert) =>
+        set((state) => ({ alerts: [...state.alerts, alert] })),
+      removeAlert: (id) =>
+        set((state) => ({ alerts: state.alerts.filter((a) => a.id !== id) })),
+      triggerAlert: (id) =>
+        set((state) => ({
+          alerts: state.alerts.map((a) =>
+            a.id === id ? { ...a, triggered: true } : a
+          ),
+        })),
+    }),
+    {
+      name: 'portfolio-store',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

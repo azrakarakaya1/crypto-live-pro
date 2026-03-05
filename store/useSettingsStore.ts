@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type Currency = 'usd' | 'eur' | 'gbp' | 'jpy' | 'btc';
 
@@ -15,7 +17,15 @@ interface SettingsState {
   setCurrency: (currency: Currency) => void;
 }
 
-export const useSettingsStore = create<SettingsState>((set) => ({
-  currency: 'usd',
-  setCurrency: (currency) => set({ currency }),
-}));
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      currency: 'usd',
+      setCurrency: (currency) => set({ currency }),
+    }),
+    {
+      name: 'settings-store',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Coin, GlobalMarketData, TrendingCoin, FearGreedData } from '@/types';
 
 interface MarketState {
@@ -6,7 +8,7 @@ interface MarketState {
   globalData: GlobalMarketData | null;
   trending: TrendingCoin[];
   fearGreed: FearGreedData | null;
-  watchlist: string[]; // coin ids
+  watchlist: string[];
   loading: boolean;
   error: string | null;
 
@@ -20,29 +22,39 @@ interface MarketState {
   removeFromWatchlist: (coinId: string) => void;
 }
 
-export const useMarketStore = create<MarketState>((set) => ({
-  coins: [],
-  globalData: null,
-  trending: [],
-  fearGreed: null,
-  watchlist: [],
-  loading: false,
-  error: null,
+export const useMarketStore = create<MarketState>()(
+  persist(
+    (set) => ({
+      coins: [],
+      globalData: null,
+      trending: [],
+      fearGreed: null,
+      watchlist: [],
+      loading: false,
+      error: null,
 
-  setCoins: (coins) => set({ coins }),
-  setGlobalData: (globalData) => set({ globalData }),
-  setTrending: (trending) => set({ trending }),
-  setFearGreed: (fearGreed) => set({ fearGreed }),
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  addToWatchlist: (coinId) =>
-    set((state) => ({
-      watchlist: state.watchlist.includes(coinId)
-        ? state.watchlist
-        : [...state.watchlist, coinId],
-    })),
-  removeFromWatchlist: (coinId) =>
-    set((state) => ({
-      watchlist: state.watchlist.filter((id) => id !== coinId),
-    })),
-}));
+      setCoins: (coins) => set({ coins }),
+      setGlobalData: (globalData) => set({ globalData }),
+      setTrending: (trending) => set({ trending }),
+      setFearGreed: (fearGreed) => set({ fearGreed }),
+      setLoading: (loading) => set({ loading }),
+      setError: (error) => set({ error }),
+      addToWatchlist: (coinId) =>
+        set((state) => ({
+          watchlist: state.watchlist.includes(coinId)
+            ? state.watchlist
+            : [...state.watchlist, coinId],
+        })),
+      removeFromWatchlist: (coinId) =>
+        set((state) => ({
+          watchlist: state.watchlist.filter((id) => id !== coinId),
+        })),
+    }),
+    {
+      name: 'market-store',
+      storage: createJSONStorage(() => AsyncStorage),
+      // Sadece watchlist kalıcı — coins/globalData her açılışta yeniden çekilir
+      partialize: (state) => ({ watchlist: state.watchlist }),
+    }
+  )
+);

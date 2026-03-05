@@ -10,6 +10,7 @@ import PortfolioSummaryCard from '@/components/portfolio/PortfolioSummaryCard';
 import HoldingRow from '@/components/portfolio/HoldingRow';
 import AlertRow from '@/components/portfolio/AlertRow';
 import AddHoldingModal from '@/components/portfolio/AddHoldingModal';
+import EditHoldingModal from '@/components/portfolio/EditHoldingModal';
 import type { PortfolioEntry } from '@/types';
 
 export default function PortfolioScreen() {
@@ -20,6 +21,7 @@ export default function PortfolioScreen() {
   const removeAlert = usePortfolioStore((s) => s.removeAlert);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<PortfolioEntry | null>(null);
 
   function getCurrentPrice(coinId: string): number {
     return coins.find((c) => c.id === coinId)?.current_price ?? 0;
@@ -72,6 +74,7 @@ export default function PortfolioScreen() {
                   entry={entry}
                   currentPrice={getCurrentPrice(entry.coinId)}
                   onRemove={removeEntry}
+                  onEdit={setEditingEntry}
                 />
               );
             }
@@ -85,6 +88,7 @@ export default function PortfolioScreen() {
         </TouchableOpacity>
 
         <AddHoldingModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+        <EditHoldingModal entry={editingEntry} onClose={() => setEditingEntry(null)} />
       </View>
     </SafeAreaView>
   );

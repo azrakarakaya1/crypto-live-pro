@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Image,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -100,13 +101,12 @@ export default function AddHoldingModal({ visible, onClose }: Props) {
                     style={styles.coinRow}
                     onPress={() => setSelectedCoin(item)}
                   >
-                    <View style={styles.coinRank}>
-                      <Text style={styles.rankText}>{item.market_cap_rank}</Text>
-                    </View>
+                    <Image source={{ uri: item.image }} style={styles.coinLogo} />
                     <View style={styles.coinInfo}>
                       <Text style={styles.coinName}>{item.name}</Text>
                       <Text style={styles.coinSymbol}>{item.symbol.toUpperCase()}</Text>
                     </View>
+                    <Text style={styles.rankText}>#{item.market_cap_rank}</Text>
                   </TouchableOpacity>
                 )}
               />
@@ -214,9 +214,10 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.cardBorder,
     gap: 12,
   },
-  coinRank: {
-    width: 32,
-    alignItems: 'center',
+  coinLogo: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
   },
   rankText: {
     fontSize: 12,

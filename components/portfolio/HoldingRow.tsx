@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { formatPercent } from '@/utils/formatters';
@@ -10,9 +10,10 @@ interface Props {
   entry: PortfolioEntry;
   currentPrice: number;
   onRemove: (id: string) => void;
+  onEdit: (entry: PortfolioEntry) => void;
 }
 
-export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
+export default function HoldingRow({ entry, currentPrice, onRemove, onEdit }: Props) {
   const coin = useMarketStore((s) => s.coins.find((c) => c.id === entry.coinId));
   const fmt = useFormatPrice();
 
@@ -34,7 +35,7 @@ export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
   }
 
   return (
-    <View style={styles.row}>
+    <Pressable style={styles.row} onLongPress={() => onEdit(entry)} delayLongPress={300}>
       {/* Logo */}
       {coin?.image ? (
         <Image source={{ uri: coin.image }} style={styles.logo} />
@@ -62,13 +63,20 @@ export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
 
       {/* Delete */}
       <TouchableOpacity
+        style={styles.editBtn}
+        onPress={() => onEdit(entry)}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      >
+        <Ionicons name="create-outline" size={16} color={Colors.textMuted} />
+      </TouchableOpacity>
+      <TouchableOpacity
         style={styles.deleteBtn}
         onPress={confirmRemove}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
         <Ionicons name="trash-outline" size={16} color={Colors.textMuted} />
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 }
 
@@ -126,6 +134,9 @@ const styles = StyleSheet.create({
   pnl: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  editBtn: {
+    padding: 4,
   },
   deleteBtn: {
     padding: 4,

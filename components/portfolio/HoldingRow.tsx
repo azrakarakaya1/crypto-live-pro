@@ -1,6 +1,8 @@
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { formatUSD, formatPercent } from '@/utils/formatters';
+import { useMarketStore } from '@/store/useMarketStore';
 import type { PortfolioEntry } from '@/types';
 
 interface Props {
@@ -10,41 +12,59 @@ interface Props {
 }
 
 export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
+  const coin = useMarketStore((s) => s.coins.find((c) => c.id === entry.coinId));
+
   const value = entry.amount * currentPrice;
   const cost = entry.amount * entry.costBasis;
   const pnl = value - cost;
   const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
   const isPositive = pnl >= 0;
 
+  function confirmRemove() {
+    Alert.alert(
+      'Remove Holding',
+      `Remove ${entry.name} from your portfolio?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Remove', style: 'destructive', onPress: () => onRemove(entry.id) },
+      ]
+    );
+  }
+
   return (
     <View style={styles.row}>
-      <View style={styles.left}>
-        <View style={styles.symbolCircle}>
-          <Text style={styles.symbolText}>{entry.symbol.charAt(0).toUpperCase()}</Text>
+      {/* Logo */}
+      {coin?.image ? (
+        <Image source={{ uri: coin.image }} style={styles.logo} />
+      ) : (
+        <View style={styles.logoFallback}>
+          <Text style={styles.logoFallbackText}>{entry.symbol.charAt(0).toUpperCase()}</Text>
         </View>
-        <View style={styles.info}>
-          <Text style={styles.name}>{entry.name}</Text>
-          <Text style={styles.amount}>
-            {entry.amount} {entry.symbol.toUpperCase()}
-          </Text>
-        </View>
+      )}
+
+      {/* Info */}
+      <View style={styles.info}>
+        <Text style={styles.name}>{entry.name}</Text>
+        <Text style={styles.amount}>
+          {entry.amount} {entry.symbol.toUpperCase()}
+        </Text>
       </View>
 
+      {/* Value + P&L */}
       <View style={styles.right}>
         <Text style={styles.value}>{formatUSD(value)}</Text>
-        <View style={[styles.badge, isPositive ? styles.badgeGreen : styles.badgeRed]}>
-          <Text style={[styles.badgeText, { color: isPositive ? Colors.green : Colors.red }]}>
-            {isPositive ? '+' : ''}{formatPercent(pnlPct)}
-          </Text>
-        </View>
+        <Text style={[styles.pnl, { color: isPositive ? Colors.green : Colors.red }]}>
+          {isPositive ? '+' : ''}{formatPercent(pnlPct)}
+        </Text>
       </View>
 
+      {/* Delete */}
       <TouchableOpacity
         style={styles.deleteBtn}
-        onPress={() => onRemove(entry.id)}
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        onPress={confirmRemove}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Text style={styles.deleteIcon}>🗑</Text>
+        <Ionicons name="trash-outline" size={16} color={Colors.textMuted} />
       </TouchableOpacity>
     </View>
   );
@@ -59,14 +79,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderBottomWidth: 1,
     borderBottomColor: Colors.cardBorder,
-  },
-  left: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
     gap: 12,
   },
-  symbolCircle: {
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  logoFallback: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -74,12 +94,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  symbolText: {
+  logoFallbackText: {
     fontSize: 16,
     fontWeight: '700',
     color: Colors.text,
   },
   info: {
+    flex: 1,
     gap: 2,
   },
   name: {
@@ -93,33 +114,18 @@ const styles = StyleSheet.create({
   },
   right: {
     alignItems: 'flex-end',
-    gap: 4,
-    marginRight: 12,
+    gap: 3,
   },
   value: {
     fontSize: 15,
     fontWeight: '600',
     color: Colors.text,
   },
-  badge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  badgeGreen: {
-    backgroundColor: 'rgba(34,197,94,0.15)',
-  },
-  badgeRed: {
-    backgroundColor: 'rgba(239,68,68,0.15)',
-  },
-  badgeText: {
-    fontSize: 11,
+  pnl: {
+    fontSize: 12,
     fontWeight: '600',
   },
   deleteBtn: {
     padding: 4,
-  },
-  deleteIcon: {
-    fontSize: 16,
   },
 });

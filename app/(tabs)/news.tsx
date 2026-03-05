@@ -6,6 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,11 +19,14 @@ import NewsCard from '@/components/news/NewsCard';
 export default function NewsScreen() {
   const { articles, loading, error, refresh } = useNews();
   const [filter, setFilter] = useState<NewsFilter>('all');
+  const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
-    if (filter === 'all') return articles;
-    return articles.filter((a) => a.sentiment === filter);
-  }, [articles, filter]);
+    let list = filter === 'all' ? articles : articles.filter((a) => a.sentiment === filter);
+    const q = query.trim().toLowerCase();
+    if (q) list = list.filter((a) => a.title.toLowerCase().includes(q) || a.source.toLowerCase().includes(q));
+    return list;
+  }, [articles, filter, query]);
 
   function renderContent() {
     if (loading && articles.length === 0) {
@@ -85,6 +89,25 @@ export default function NewsScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>News</Text>
       </View>
+
+      <View style={styles.searchRow}>
+        <Ionicons name="search" size={16} color={Colors.textMuted} style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search news..."
+          placeholderTextColor={Colors.textMuted}
+          value={query}
+          onChangeText={setQuery}
+          returnKeyType="search"
+          clearButtonMode="while-editing"
+        />
+        {query.length > 0 && (
+          <TouchableOpacity onPress={() => setQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Ionicons name="close-circle" size={16} color={Colors.textMuted} />
+          </TouchableOpacity>
+        )}
+      </View>
+
       <FilterBar active={filter} onChange={setFilter} />
       {renderContent()}
     </SafeAreaView>
@@ -105,6 +128,27 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     color: Colors.text,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 10,
+    backgroundColor: Colors.card,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+    paddingHorizontal: 12,
+    height: 42,
+    gap: 8,
+  },
+  searchIcon: {
+    marginRight: 2,
+  },
+  searchInput: {
+    flex: 1,
+    color: Colors.text,
+    fontSize: 14,
   },
   list: {
     paddingTop: 4,

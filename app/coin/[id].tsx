@@ -16,7 +16,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Colors from '@/constants/Colors';
 import { useMarketStore } from '@/store/useMarketStore';
 import { getCoinChart } from '@/services/coingecko';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import LineChart from '@/components/markets/LineChart';
 import CoinStatGrid from '@/components/markets/CoinStatGrid';
 
@@ -38,6 +39,7 @@ export default function CoinDetailScreen() {
   const removeFromWatchlist = useMarketStore((s) => s.removeFromWatchlist);
 
   const { width: screenWidth } = useWindowDimensions();
+  const fmt = useFormatPrice();
 
   const [range, setRange] = useState<Range>('7');
   const [prices, setPrices] = useState<number[]>([]);
@@ -107,7 +109,7 @@ export default function CoinDetailScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* Price header */}
         <View style={styles.priceBlock}>
-          <Text style={styles.price}>{formatUSD(coin.current_price)}</Text>
+          <Text style={styles.price}>{fmt(coin.current_price)}</Text>
           <View style={[styles.changeBadge, { backgroundColor: isUp ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)' }]}>
             <Ionicons
               name={isUp ? 'arrow-up' : 'arrow-down'}

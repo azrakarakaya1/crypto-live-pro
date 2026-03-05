@@ -1,7 +1,8 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import { useMarketStore } from '@/store/useMarketStore';
 import type { PortfolioEntry } from '@/types';
 
@@ -13,6 +14,7 @@ interface Props {
 
 export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
   const coin = useMarketStore((s) => s.coins.find((c) => c.id === entry.coinId));
+  const fmt = useFormatPrice();
 
   const value = entry.amount * currentPrice;
   const cost = entry.amount * entry.costBasis;
@@ -52,7 +54,7 @@ export default function HoldingRow({ entry, currentPrice, onRemove }: Props) {
 
       {/* Value + P&L */}
       <View style={styles.right}>
-        <Text style={styles.value}>{formatUSD(value)}</Text>
+        <Text style={styles.value}>{fmt(value)}</Text>
         <Text style={[styles.pnl, { color: isPositive ? Colors.green : Colors.red }]}>
           {isPositive ? '+' : ''}{formatPercent(pnlPct)}
         </Text>

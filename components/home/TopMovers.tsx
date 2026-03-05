@@ -2,7 +2,7 @@ import { View, Text, Image, ScrollView, StyleSheet, Pressable } from 'react-nati
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import type { Coin } from '@/types';
 
 interface Props {
@@ -37,6 +37,7 @@ export default function TopMovers({ coins }: Props) {
 
 function MoverCard({ coin }: { coin: Coin }) {
   const router = useRouter();
+  const fmt = useFormatPrice();
   const isUp = coin.price_change_percentage_24h >= 0;
   const changeColor = isUp ? Colors.green : Colors.red;
 
@@ -50,7 +51,7 @@ function MoverCard({ coin }: { coin: Coin }) {
         {coin.symbol.toUpperCase()}
       </Text>
       <Text style={styles.price} numberOfLines={1}>
-        {formatUSD(coin.current_price)}
+        {fmt(coin.current_price)}
       </Text>
       <View style={styles.changeBadge}>
         <Ionicons

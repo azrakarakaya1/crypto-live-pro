@@ -1,7 +1,8 @@
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { Coin } from '@/types';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import Colors from '@/constants/Colors';
 
 interface CoinRowProps {
@@ -10,6 +11,7 @@ interface CoinRowProps {
 
 export default function CoinRow({ coin }: CoinRowProps) {
   const router = useRouter();
+  const fmt = useFormatPrice();
   const isPositive = coin.price_change_percentage_24h >= 0;
 
   return (
@@ -24,7 +26,7 @@ export default function CoinRow({ coin }: CoinRowProps) {
         <Text style={styles.symbol}>{coin.symbol.toUpperCase()}</Text>
       </View>
       <View style={styles.priceBlock}>
-        <Text style={styles.price}>{formatUSD(coin.current_price)}</Text>
+        <Text style={styles.price}>{fmt(coin.current_price)}</Text>
         <View style={[styles.badge, isPositive ? styles.badgeGreen : styles.badgeRed]}>
           <Text style={[styles.badgeText, isPositive ? styles.badgeTextGreen : styles.badgeTextRed]}>
             {formatPercent(coin.price_change_percentage_24h)}

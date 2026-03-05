@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native';
 import Colors from '@/constants/Colors';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 
 interface Props {
   totalValue: number;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function PortfolioSummaryCard({ totalValue, totalCost }: Props) {
+  const fmt = useFormatPrice();
   const pnl = totalValue - totalCost;
   const pnlPct = totalCost > 0 ? (pnl / totalCost) * 100 : 0;
   const isPositive = pnl >= 0;
@@ -24,12 +26,12 @@ export default function PortfolioSummaryCard({ totalValue, totalCost }: Props) {
   return (
     <View style={styles.card}>
       <Text style={styles.label}>Total Portfolio Value</Text>
-      <Text style={styles.value}>{formatUSD(totalValue)}</Text>
+      <Text style={styles.value}>{fmt(totalValue)}</Text>
       <View style={styles.row}>
-        <Text style={styles.costLabel}>Cost basis: {formatUSD(totalCost)}</Text>
+        <Text style={styles.costLabel}>Cost basis: {fmt(totalCost)}</Text>
         <View style={[styles.badge, isPositive ? styles.badgeGreen : styles.badgeRed]}>
           <Text style={[styles.badgeText, { color: isPositive ? Colors.green : Colors.red }]}>
-            {isPositive ? '+' : ''}{formatUSD(pnl)} ({formatPercent(pnlPct)})
+            {isPositive ? '+' : ''}{fmt(pnl)} ({formatPercent(pnlPct)})
           </Text>
         </View>
       </View>

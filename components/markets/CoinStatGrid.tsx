@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
-import { formatUSD, formatLargeNumber, formatPercent } from '@/utils/formatters';
+import { formatLargeNumber, formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import type { Coin } from '@/types';
 
 interface Props {
@@ -14,15 +15,16 @@ interface StatItem {
 }
 
 export default function CoinStatGrid({ coin }: Props) {
+  const fmt = useFormatPrice();
   const athChange = ((coin.current_price - coin.ath) / coin.ath) * 100;
   const atlChange = ((coin.current_price - coin.atl) / coin.atl) * 100;
 
   const stats: StatItem[] = [
-    { label: 'Market Cap', value: formatUSD(coin.market_cap, true) },
-    { label: '24h Volume', value: formatUSD(coin.total_volume, true) },
+    { label: 'Market Cap', value: fmt(coin.market_cap, true) },
+    { label: '24h Volume', value: fmt(coin.total_volume, true) },
     {
       label: 'All-Time High',
-      value: formatUSD(coin.ath),
+      value: fmt(coin.ath),
     },
     {
       label: 'From ATH',
@@ -31,7 +33,7 @@ export default function CoinStatGrid({ coin }: Props) {
     },
     {
       label: 'All-Time Low',
-      value: formatUSD(coin.atl),
+      value: fmt(coin.atl),
     },
     {
       label: 'From ATL',

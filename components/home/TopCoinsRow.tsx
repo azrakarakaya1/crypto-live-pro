@@ -2,7 +2,8 @@ import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
-import { formatUSD, formatPercent } from '@/utils/formatters';
+import { formatPercent } from '@/utils/formatters';
+import { useFormatPrice } from '@/hooks/useFormatPrice';
 import type { Coin } from '@/types';
 
 interface Props {
@@ -25,6 +26,7 @@ export default function TopCoinsRow({ coins }: Props) {
 
 function CoinCard({ coin }: { coin: Coin }) {
   const router = useRouter();
+  const fmt = useFormatPrice();
   const isUp = coin.price_change_percentage_24h >= 0;
   const changeColor = isUp ? Colors.green : Colors.red;
   const changeBg = isUp ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)';
@@ -47,7 +49,7 @@ function CoinCard({ coin }: { coin: Coin }) {
           </Text>
         </View>
       </View>
-      <Text style={styles.price}>{formatUSD(coin.current_price)}</Text>
+      <Text style={styles.price}>{fmt(coin.current_price)}</Text>
     </Pressable>
   );
 }

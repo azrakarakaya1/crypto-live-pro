@@ -99,14 +99,26 @@ export default function ProfileScreen() {
           />
           <SettingsRow
             label="News"
-            value="CryptoPanic"
+            value="RSS Feeds"
             leftIcon="newspaper-outline"
+            showChevron={false}
+          />
+          <SettingsRow
+            label="On-Chain"
+            value="mempool.space"
+            leftIcon="link-outline"
+            showChevron={false}
+          />
+          <SettingsRow
+            label="Sentiment"
+            value="Alternative.me"
+            leftIcon="happy-outline"
             showChevron={false}
           />
         </SettingsSection>
 
         <Text style={styles.footer}>
-          Made with ♥ · Data by CoinGecko & CryptoPanic
+          Made with ♥ · Data by CoinGecko, mempool.space & RSS
         </Text>
       </ScrollView>
 

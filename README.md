@@ -14,33 +14,12 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 
 ## Features
 
-### Market Data
-- Live prices for top 100 coins by market cap
-- Global market cap, BTC/ETH dominance, 24h volume
-- Fear & Greed index, top gainers/losers, trending coins
-- SVG price chart with 1D / 7D / 30D / 1Y range
-
-### Portfolio
-- Track holdings with cost basis and real-time P&L
-- Price alerts — set target price, get notified when triggered
-- Multi-currency support: USD, EUR, GBP, JPY, BTC
-
-### Markets
-- Searchable and sortable coin list
-- Watchlist filter
-- Tap any coin for detailed stats and chart
-
-### On-Chain Analytics
-- Bitcoin: hashrate, mempool, fees, difficulty adjustment
-- Ethereum: network stats, gas fees
-
-### News
-- Aggregated from CoinDesk, Cointelegraph, CryptoSlate
-- Search by title or source
-
-### Learn Hub
-- Structured modules on blockchain fundamentals
-- Searchable glossary
+- **Live Prices** — Top 100 coins, global stats, Fear & Greed index, trending coins
+- **Markets** — Searchable, sortable coin list with watchlist and price charts
+- **Portfolio** — Holdings tracker with cost basis, real-time P&L, and price alerts
+- **On-Chain** — BTC/ETH hashrate, mempool, fees, difficulty
+- **News** — Aggregated from CoinDesk, Cointelegraph, CryptoSlate
+- **Learn** — Blockchain fundamentals and searchable glossary
 
 ---
 

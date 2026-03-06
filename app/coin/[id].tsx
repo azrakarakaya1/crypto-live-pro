@@ -52,6 +52,8 @@ export default function CoinDetailScreen() {
 
   const loadChart = useCallback(async () => {
     if (!id) return;
+    setPrices([]);
+    setTimestamps([]);
     setChartLoading(true);
     try {
       const data = await getCoinChart(id, Number(range));
@@ -59,7 +61,7 @@ export default function CoinDetailScreen() {
       setTimestamps(raw.map(([t]) => t));
       setPrices(raw.map(([, p]) => p));
     } catch {
-      // silently fail
+      // silently fail — chart stays empty
     } finally {
       setChartLoading(false);
     }

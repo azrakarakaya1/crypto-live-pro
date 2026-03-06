@@ -8,7 +8,8 @@ const CURRENCY_SYMBOLS: Record<Currency, string> = {
   btc: '₿',
 };
 
-export function formatPrice(value: number, currency: Currency = 'usd', compact = false): string {
+export function formatPrice(value: number | null | undefined, currency: Currency = 'usd', compact = false): string {
+  if (value == null) return '—';
   if (currency === 'btc') {
     if (compact) {
       if (value >= 1) return `₿${value.toFixed(4)}`;
@@ -38,12 +39,14 @@ export function formatUSD(value: number, compact = false): string {
   return formatPrice(value, 'usd', compact);
 }
 
-export function formatPercent(value: number): string {
+export function formatPercent(value: number | null | undefined): string {
+  if (value == null) return '—';
   const sign = value >= 0 ? '+' : '';
   return `${sign}${value.toFixed(2)}%`;
 }
 
-export function formatLargeNumber(value: number): string {
+export function formatLargeNumber(value: number | null | undefined): string {
+  if (value == null) return '—';
   if (value >= 1e12) return `${(value / 1e12).toFixed(2)}T`;
   if (value >= 1e9)  return `${(value / 1e9).toFixed(2)}B`;
   if (value >= 1e6)  return `${(value / 1e6).toFixed(2)}M`;

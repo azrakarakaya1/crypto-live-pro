@@ -201,6 +201,7 @@ crypto-live-pro/
 - [x] Price alerts (set from coin detail, triggered on price check)
 - [x] Multi-currency support (USD, EUR, GBP, JPY, BTC)
 - [x] Persistent portfolio, watchlist, and settings (AsyncStorage)
+**App**
 - [ ] Push notifications for price alerts
 - [ ] AI news summaries (GPT-4o-mini)
 - [ ] Supabase auth + cloud portfolio sync
@@ -209,6 +210,13 @@ crypto-live-pro/
 - [ ] Coin comparison — side-by-side charts for two coins
 - [ ] Dark / Light theme toggle
 - [ ] Haptic feedback
+
+**DevOps**
+- [ ] Dockerize each microservice + docker-compose setup
+- [ ] CI/CD pipeline with GitHub Actions
+- [ ] Health check endpoints (`/health`) for each service
+- [ ] Environment separation (dev / staging / prod)
+- [ ] Structured logging + Prometheus / Grafana monitoring
 
 ---
 

@@ -10,26 +10,22 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
   <tr>
     <td align="center"><b>Home</b></td>
     <td align="center"><b>Markets</b></td>
-  </tr>
-  <tr>
-    <td><img src="assets/screenshots/home.png" width="400"/></td>
-    <td><img src="assets/screenshots/markets.png" width="400"/></td>
-  </tr>
-  <tr>
     <td align="center"><b>Coin Detail</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/screenshots/home.png" width="280"/></td>
+    <td><img src="assets/screenshots/markets.png" width="280"/></td>
+    <td><img src="assets/screenshots/coin-detail.png" width="280"/></td>
+  </tr>
+  <tr>
     <td align="center"><b>On-Chain</b></td>
-  </tr>
-  <tr>
-    <td><img src="assets/screenshots/coin-detail.png" width="400"/></td>
-    <td><img src="assets/screenshots/onchain.png" width="400"/></td>
-  </tr>
-  <tr>
     <td align="center"><b>News</b></td>
     <td align="center"><b>Profile</b></td>
   </tr>
   <tr>
-    <td><img src="assets/screenshots/news.png" width="400"/></td>
-    <td><img src="assets/screenshots/profile.png" width="400"/></td>
+    <td><img src="assets/screenshots/onchain.png" width="280"/></td>
+    <td><img src="assets/screenshots/news.png" width="280"/></td>
+    <td><img src="assets/screenshots/profile.png" width="280"/></td>
   </tr>
 </table>
 

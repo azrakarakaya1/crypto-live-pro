@@ -4,7 +4,7 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 
 ---
 
-## Screenshots
+## Insights
 
 <table>
   <tr>

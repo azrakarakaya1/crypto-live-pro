@@ -6,7 +6,13 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 
 ## Screenshots
 
-> _(coming soon)_
+| Home | Markets | Coin Detail |
+|------|---------|-------------|
+| ![Home](assets/screenshots/home.png) | ![Markets](assets/screenshots/markets.png) | ![Coin Detail](assets/screenshots/coin-detail.jpeg) |
+
+| On-Chain | News | Profile |
+|----------|------|---------|
+| ![On-Chain](assets/screenshots/onchain.png) | ![News](assets/screenshots/news.png) | ![Profile](assets/screenshots/profile.png) |
 
 ---
 

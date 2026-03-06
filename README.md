@@ -8,12 +8,12 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 
 <table>
   <tr>
-    <td><img src="assets/screenshots/home.png" width="160"/></td>
-    <td><img src="assets/screenshots/markets.png" width="160"/></td>
-    <td><img src="assets/screenshots/coin-detail.jpeg" width="160"/></td>
-    <td><img src="assets/screenshots/onchain.png" width="160"/></td>
-    <td><img src="assets/screenshots/news.png" width="160"/></td>
-    <td><img src="assets/screenshots/profile.png" width="160"/></td>
+    <td><img src="assets/screenshots/home.png" width="220"/></td>
+    <td><img src="assets/screenshots/markets.png" width="220"/></td>
+    <td><img src="assets/screenshots/coin-detail.png" width="220"/></td>
+    <td><img src="assets/screenshots/onchain.png" width="220"/></td>
+    <td><img src="assets/screenshots/news.png" width="220"/></td>
+    <td><img src="assets/screenshots/profile.png" width="220"/></td>
   </tr>
   <tr>
     <td align="center">Home</td>

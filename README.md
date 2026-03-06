@@ -6,27 +6,36 @@ A real-time cryptocurrency tracking app for iOS and Android, built with React Na
 
 ## Insights
 
-**Home** &nbsp;&nbsp; **Markets** &nbsp;&nbsp; **Coin Detail**
-
-<img src="assets/screenshots/home.png" width="30%"/> <img src="assets/screenshots/markets.png" width="30%"/> <img src="assets/screenshots/coin-detail.png" width="30%"/>
-
-**On-Chain** &nbsp;&nbsp; **News** &nbsp;&nbsp; **Profile**
-
-<img src="assets/screenshots/onchain.png" width="30%"/> <img src="assets/screenshots/news.png" width="30%"/> <img src="assets/screenshots/profile.png" width="30%"/>
+<table>
+  <tr>
+    <td align="center"><b>Home</b></td>
+    <td align="center"><b>Markets</b></td>
+    <td align="center"><b>Coin Detail</b></td>
+    <td align="center"><b>On-Chain</b></td>
+    <td align="center"><b>News</b></td>
+    <td align="center"><b>Profile</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/screenshots/home.png" width="150"/></td>
+    <td><img src="assets/screenshots/markets.png" width="150"/></td>
+    <td><img src="assets/screenshots/coin-detail.png" width="150"/></td>
+    <td><img src="assets/screenshots/onchain.png" width="150"/></td>
+    <td><img src="assets/screenshots/news.png" width="150"/></td>
+    <td><img src="assets/screenshots/profile.png" width="150"/></td>
+  </tr>
+</table>
 
 ---
 
 ## Features
 
-| Tab | Description |
-|-----|-------------|
-| **Home** | Global market cap, BTC/ETH dominance, Fear & Greed index, top movers, trending coins |
-| **Markets** | Live coin list with search, sort, and watchlist filter |
-| **Coin Detail** | SVG price chart with 1D / 7D / 30D / 1Y range, market stats, price alerts, watchlist toggle |
-| **On-Chain** | BTC/ETH network stats — hashrate, fees, mempool, difficulty adjustment |
-| **News** | Aggregated news from CoinDesk, Cointelegraph, CryptoSlate with search filter |
-| **Portfolio** | Holdings tracker with cost basis, real-time P&L, and price alerts |
-| **Learn** | Structured modules on blockchain fundamentals with searchable glossary |
+- **Home** — Global market cap, BTC/ETH dominance, Fear & Greed index, top movers, trending coins
+- **Markets** — Live coin list with search, sort, and watchlist filter
+- **Coin Detail** — SVG price chart with 1D / 7D / 30D / 1Y range, market stats, price alerts, watchlist toggle
+- **On-Chain** — BTC/ETH network stats — hashrate, fees, mempool, difficulty adjustment
+- **News** — Aggregated news from CoinDesk, Cointelegraph, CryptoSlate with search filter
+- **Portfolio** — Holdings tracker with cost basis, real-time P&L, and price alerts
+- **Learn** — Structured modules on blockchain fundamentals with searchable glossary
 
 ---
 

@@ -205,6 +205,10 @@ crypto-live-pro/
 - [ ] AI news summaries (GPT-4o-mini)
 - [ ] Supabase auth + cloud portfolio sync
 - [ ] RevenueCat subscriptions
+- [ ] iOS/Android home screen widget with live prices
+- [ ] Coin comparison — side-by-side charts for two coins
+- [ ] Dark / Light theme toggle
+- [ ] Haptic feedback
 
 ---
 
